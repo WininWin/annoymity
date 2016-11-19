@@ -1,0 +1,59 @@
+html, body{
+	
+}
+
+#main{
+	width: 500px;
+	height: 240px;
+	background-color: grey;
+	position: fixed;
+    left: 50%;
+    top:25%;
+    transform: translate(-50%, 0);
+    -webkit-transform: translate(-50%, 0);
+}
+
+textarea {
+    resize: none;
+}
+
+#main > .row{
+	width: 100%;
+}
+
+#title{
+	text-align: center;
+	font-size: 45px;
+	font-weight: bold;
+	font-style: italic;
+}
+#input_field{
+	margin: 0 auto;
+}
+#input_box{
+	width: 100%;
+	height: 100%;
+
+}
+.pop-up-box{
+	position: fixed; 
+
+}
+
+.pop-up-box > span{
+	
+}
+
+#submit{
+
+}
+#textColor, #textStyle {
+	font-style: bold;
+
+}
+
+.words-body{
+	z-index: -1;
+	font-size: 12pt;
+   
+}

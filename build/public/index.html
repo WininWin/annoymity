@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Anonymity</title>
+
+
+	<script src="https://code.jquery.com/jquery-2.2.4.min.js"
+  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+  crossorigin="anonymous"></script>
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<script src="http://malsup.github.com/jquery.form.js"></script> 
+	<link href="./css/style.css" rel="stylesheet">
+	<script src="./js/script.js"></script>
+</head>
+<body>
+	<div class="words-body">
+	</div>
+
+	<div class="container" id="main">
+		<div class="row" >
+			<div class="col-md-6 col-md-offset-3" id="title">Anonymity</div>
+			
+			</div>
+		<div class="row" id="input_field">
+			
+			<form action="/words" id = "comment" method = "post">
+				<textarea type = "text" rows="4" name="words" id="input_box" maxlength="1000" required>Limit 100 words or 1000 characters...</textarea>
+				
+				<span id = "textColor">Color : 
+					<input type="radio" name="color" value="Black" checked="checked">Black</input>
+					<input type="radio" name="color" value="Red"> Red</input>
+					<input type="radio" name="color" value="Blue">Blue</input>
+				</span> 
+				<span id="textStyle">/ Style :
+					<input type="radio" name="weight" value="normal" checked="checked">Normal</input>
+					<input type="radio" name="weight" value="bold">Bold</input>
+				
+				</span>
+				
+				<button id = "submit" class="btn btn-primary pull-right" type="submit" >Submit</button>
+				<br>
+				<span id = "wordcount">Word Count : 0 /</span>
+				<span id="chara_count">Character Count : 0</span> <br>
+				<span id = "Total">Total Count : </span>
+			</form>
+
+			<div id="error_msg">
+			
+			</div>
+			
+		</div>
+
+	</div>
+</body>
+</html>
