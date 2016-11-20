@@ -10,7 +10,7 @@ var wordFilter = require('./wordFilter.js');
 //servier init
 var app = express();
 app.use(express.static(__dirname + '/public/'));
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || 80;
 console.log("Express server running on " + port);
 app.listen(process.env.PORT || port);
 app.use( bodyParser.json() );       // to support JSON-encoded bodies
