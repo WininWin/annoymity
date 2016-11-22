@@ -10,7 +10,7 @@ var wordFilter = require('./wordFilter.js');
 //servier init
 var app = express();
 app.use(express.static(__dirname + '/public/'));
-var port = process.env.PORT || 80;
+var port = process.env.PORT || 3000;
 console.log("Express server running on " + port);
 app.listen(process.env.PORT || port);
 app.use( bodyParser.json() );       // to support JSON-encoded bodies
@@ -23,7 +23,8 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 var wordsSchema = mongoose.Schema({
     words: String,
     color : String,
-    weight : String
+    weight : String,
+    createdAt: {type: Date, default: Date.now}
 });
 var WordsModel = mongoose.model('words_model', wordsSchema);
 
@@ -72,7 +73,7 @@ db.once('open', function() {
 	//init browser
 	app.get('/all', function(req,res,err){
 
-	    WordsModel.find().skip(parseInt(req.query.skip)).limit(parseInt(req.query.limit)).exec(function(err,all){
+	    WordsModel.find().sort({createdAt: -1}).skip(parseInt(req.query.skip)).limit(parseInt(req.query.limit)).exec(function(err,all){
 	        if(err){
 	            console.log(err);
 	            throw err;

@@ -11,6 +11,7 @@ html, body{
     top:25%;
     transform: translate(-50%, 0);
     -webkit-transform: translate(-50%, 0);
+    z-index: 1;
 }
 
 textarea {
@@ -37,11 +38,16 @@ textarea {
 }
 .pop-up-box{
 	position: fixed; 
+	background-color: lightblue;
+	z-index: 0;
+	border: 2px solid #a1a1a1;
+    border-radius: 25px;
 
 }
 
-.pop-up-box > span{
-	
+.pop-up-box > div{
+	position: relative;
+	font-size: 15pt;
 }
 
 #submit{

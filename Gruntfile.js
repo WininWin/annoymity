@@ -9,18 +9,27 @@ module.exports = function(grunt) {
       },
       dist: {
         files: {
-          'build/app.js': ['src/app.js'],
+          'build/app.js': ['build/app.js'],
           'build/public/js/script.js' : ['src/public/js/*.js'],
           'build/wordFilter.js' : ['src/wordFilter.js']
 
         }
       }
     },
+    concat: {
+      options: {
+        separator: ';',
+      },
+      dist: {
+        src: ['src/prod.js', 'src/app.js'],
+        dest: 'build/app.js',
+        },
+    },
     copy: {
       files: {
             expand : true,
-            dest   : 'build/',
-            cwd    : 'src/',
+            dest   : 'build/public/',
+            cwd    : 'src/public/',
             src    : [
               '**',
             ],
@@ -90,10 +99,13 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-mocha');
   grunt.loadNpmTasks('grunt-mocha-test');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-express-server');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.registerTask('test', ['jshint', 'mochaTest','mocha']);
   grunt.registerTask('server', ['jshint', 'express:dev', 'watch']);
+
+  grunt.registerTask('build', ['jshint', 'mochaTest', 'mocha','copy','concat', 'uglify', 'express:prod']);
 
   grunt.registerTask('default', ['jshint', 'mochaTest', 'mocha','copy','uglify', 'express:dev']);
 

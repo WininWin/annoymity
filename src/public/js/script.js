@@ -1,7 +1,6 @@
-var maxSubmits = 5;
-var intervalMilliseconds = 10000; // for testing   
+ 
 var timesSubmitted = 0;
-var interval;   
+var interval;  
 
 
 //word counts
@@ -21,7 +20,29 @@ function wordCount(words) {
 	
 }
 
+function getRandomPositionTop(){
+	var field_pos_top = $("#main").offset().top;
+	var field_pos_top_width = field_pos_top + $("#main").height();
 
+	var random_up_pos = (Math.random() * field_pos_top); 
+	var random_down_pos = field_pos_top_width + (Math.random() * ($(document.body).height()-field_pos_top_width));
+
+	var half_percent = Math.random();
+
+	return (half_percent<0.5)?random_up_pos:random_down_pos;
+}
+
+function getRandomPositionLeft(){
+	var field_pos_left = $("#main").offset().left;
+	var field_pos_left_width = field_pos_left + $("#main").width();
+
+	var random_left_pos = (Math.random() * field_pos_left);
+	var random_right_pos = field_pos_left_width + (Math.random() * ($(document.body).width()-field_pos_left_width));
+
+	var half_percent = Math.random();
+
+	return (half_percent<0.5)?random_left_pos:random_right_pos;
+}
 	
 var skip = 0;
 $(document).ready(function() {
@@ -45,7 +66,7 @@ $(document).ready(function() {
 		}
 
 		//exceed 100 words
-		if(w_count >= 100){
+		if(w_count > 50){
 			$('#input_box').keypress(function(e) {
 				    e.preventDefault();
 				});
@@ -60,9 +81,9 @@ $(document).ready(function() {
 
 	//browser init
 	$.get("/all?skip=0&limit=500", function(result) {
-
+		console.log(result);
 		for(var i = 0; i < result.length;i++){
-			$(".words-body").prepend("<span style = \'color:" + result[i].color + ";font-weight:"+ result[i].weight+ "\'>" + result[i].words + "</span>");
+			$(".words-body").append("<span style = \'color:" + result[i].color + ";font-weight:"+ result[i].weight+ "\'>" + result[i].words + "</span>");
 		}
 		skip = 500;
 
@@ -75,21 +96,21 @@ $(document).ready(function() {
             interval = setTimeout(function () {
                 interval = undefined;
                 timesSubmitted = 0;
-            }, intervalMilliseconds);
+            }, 10000);
 	        }
 	        timesSubmitted ++;
-	   		 if (timesSubmitted > maxSubmits) {
-	            $('#error_msg').text('Too many submit attempts!!').fadeIn('1000').fadeOut('4000');
+	   		 if (timesSubmitted > 5) {
+	            $('#error_msg').text('Too many submit attempts!!').fadeIn('slow').delay('2000').fadeOut('slow');
 	            return false;
 	        } 
 	       else{
 		       	var w_count = wordCount($('#input_box').val());
 				var c_count = (($('#input_box').val()).split('')).length;
 
-
+				console.log(w_count);
 				//copy and paste exceed 100 words or 1000 characters
-				if(w_count > 100 || c_count > 1000){
-					$("#error_msg").text("You exceed 100 words or 1000 characters");
+				if(w_count > 50 || c_count > 500){
+					$("#error_msg").text("You exceed 50 words or 500 characters");
 					return false;
 				}
 				//data send
@@ -103,6 +124,21 @@ $(document).ready(function() {
 		            success: function(response) {
 		            	console.log(response);
 		            	$(".words-body").prepend("<span style = \'color:" + response.color + ";font-weight:"+ response.weight+ "\'>" + response.words + "</span>");	
+		            	
+		            	var top_pos = getRandomPositionTop();
+		            	var left_pos = getRandomPositionLeft();
+
+		            	var str = (response.words).trim();
+		            	str = str.slice(0, -1); // remove '/ '
+
+		            	var elem = $('<div />').addClass('row pop-up-box').css({'left': left_pos, 'top' : top_pos});
+		            	elem.append("<div class=\'col-md-12\' style = \'color:" + response.color + ";font-weight:"+ response.weight+ "\'>" + str + "</div>");
+		            	
+		            	$(document.body).append(elem);
+		            	elem.hide().fadeIn('slow');
+		            	elem.delay('2000').fadeOut("slow");
+		            	
+
 
 		            
 						
@@ -127,7 +163,7 @@ $(document).ready(function() {
 	      $.get("/all?skip=" + skip + "&limit=500", function(result) {
 
 			for(var i = 0; i < result.length;i++){
-				$(".words-body").prepend("<span style = \'color:" + result[i].color + ";font-weight:"+ result[i].weight+ "\'>" + result[i].words + "</span>");
+				$(".words-body").append("<span style = \'color:" + result[i].color + ";font-weight:"+ result[i].weight+ "\'>" + result[i].words + "</span>");
 			}
 			skip = skip + 500;
 		});
