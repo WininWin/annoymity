@@ -46,8 +46,23 @@ function getRandomPositionLeft(){
 	
 var skip = 0;
 $(document).ready(function() {
+	  var socket = io();
+	   socket.on('refresh feed',function(response){
+            $(".words-body").prepend("<span style = \'color:" + response.color + ";font-weight:"+ response.weight+ "\'>" + response.words + "</span>");	
+		            	
+		     var top_pos = getRandomPositionTop();
+		     var left_pos = getRandomPositionLeft();
 
+		     var str = (response.words).trim();
+		     str = str.slice(0, -1); // remove '/ '
 
+		     var elem = $('<div />').addClass('row pop-up-box').css({'left': left_pos, 'top' : top_pos});
+		     elem.append("<div class=\'col-md-12\' style = \'color:" + response.color + ";font-weight:"+ response.weight+ "\'>" + str + "</div>");
+		            	
+		      $(document.body).append(elem);
+		       elem.hide().fadeIn('slow');
+		       elem.delay('2000').fadeOut("slow");
+       });
 	//count words or characters
 	$('#input_box').on('input', function() {
 
@@ -81,7 +96,7 @@ $(document).ready(function() {
 
 	//browser init
 	$.get("/all?skip=0&limit=500", function(result) {
-		console.log(result);
+		
 		for(var i = 0; i < result.length;i++){
 			$(".words-body").append("<span style = \'color:" + result[i].color + ";font-weight:"+ result[i].weight+ "\'>" + result[i].words + "</span>");
 		}
@@ -107,7 +122,6 @@ $(document).ready(function() {
 		       	var w_count = wordCount($('#input_box').val());
 				var c_count = (($('#input_box').val()).split('')).length;
 
-				console.log(w_count);
 				//copy and paste exceed 100 words or 1000 characters
 				if(w_count > 50 || c_count > 500){
 					$("#error_msg").text("You exceed 50 words or 500 characters");
@@ -123,23 +137,6 @@ $(document).ready(function() {
 		            //data recieve
 		            success: function(response) {
 		            	console.log(response);
-		            	$(".words-body").prepend("<span style = \'color:" + response.color + ";font-weight:"+ response.weight+ "\'>" + response.words + "</span>");	
-		            	
-		            	var top_pos = getRandomPositionTop();
-		            	var left_pos = getRandomPositionLeft();
-
-		            	var str = (response.words).trim();
-		            	str = str.slice(0, -1); // remove '/ '
-
-		            	var elem = $('<div />').addClass('row pop-up-box').css({'left': left_pos, 'top' : top_pos});
-		            	elem.append("<div class=\'col-md-12\' style = \'color:" + response.color + ";font-weight:"+ response.weight+ "\'>" + str + "</div>");
-		            	
-		            	$(document.body).append(elem);
-		            	elem.hide().fadeIn('slow');
-		            	elem.delay('2000').fadeOut("slow");
-		            	
-
-
 		            
 						
 		            }
