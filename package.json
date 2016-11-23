@@ -4,7 +4,7 @@
   "description": "web app",
   "main": "src/app.js",
   "scripts": {
-    "test": "npm test"
+    "test": "grunt test"
   },
   "author": "Yeonsung Kim",
   "license": "ISC",
