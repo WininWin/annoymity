@@ -41,15 +41,19 @@ db.on('error', console.error);
 
 //db connect
 mongoose.connect('mongodb://localhost/anoymity_speech');
+
+//db open
 db.once('open', function() {
+	//socket io connect
 	io.on('connection',function(socket){ 
 	  	
 
-		 	//receive data
+		 	//receive data and save to db
 		 	app.post('/words', function(req,res,err){
 		 		
 		 		var words = req.body.words;
 
+		 		//filter the words
 		 		var words_after_filtering = wordFilter.Filtering(words);
 
 		 		var words_for_db = new WordsModel({words : words_after_filtering, color : req.body.color, weight : req.body.weight});
@@ -101,9 +105,21 @@ db.once('open', function() {
 			    });
 		});
 
+		//get total data counts
+		app.get('/count', function(req, res, err){
+			WordsModel.count({}, function( err, count){
+    			console.log( "Number of datas:", count );
 
+    			if(err){
+    				console.log(err);
+    			}
 
+    			res.send(count.toString());
 
+    		});
+		});
+
+	
 	});
 
 

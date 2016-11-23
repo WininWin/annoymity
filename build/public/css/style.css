@@ -5,7 +5,7 @@ html, body{
 #main{
 	width: 500px;
 	height: 240px;
-	background-color: grey;
+	background-color: #B0C4DE;
 	position: fixed;
     left: 50%;
     top:25%;
@@ -36,6 +36,7 @@ textarea {
 	height: 100%;
 
 }
+
 .pop-up-box{
 	position: fixed; 
 	background-color: lightblue;
@@ -54,8 +55,9 @@ textarea {
 
 }
 #textColor, #textStyle {
-	font-style: bold;
-
+	font-weight: bold;
+	font-size: 15px;
+	
 }
 
 .words-body{

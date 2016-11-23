@@ -1,9 +1,15 @@
  
+//global
 var timesSubmitted = 0;
 var interval;  
+var skip = 0;
 
 
-//word counts
+/**
+ * Count words in string
+ * @param {String} words
+ * @return {Number} Number of words
+ */
 function wordCount(words) {
 	
 	//remove line and space at the end and beginning of the string
@@ -19,7 +25,10 @@ function wordCount(words) {
  	return word_array.length;
 	
 }
-
+/**
+ * get random top position from document except input field
+ * @return {Number} random position
+ */
 function getRandomPositionTop(){
 	var field_pos_top = $("#main").offset().top;
 	var field_pos_top_width = field_pos_top + $("#main").height();
@@ -32,6 +41,10 @@ function getRandomPositionTop(){
 	return (half_percent<0.5)?random_up_pos:random_down_pos;
 }
 
+/**
+ * get random left position from document except input field
+ * @return {Number} random position
+ */
 function getRandomPositionLeft(){
 	var field_pos_left = $("#main").offset().left;
 	var field_pos_left_width = field_pos_left + $("#main").width();
@@ -43,10 +56,14 @@ function getRandomPositionLeft(){
 
 	return (half_percent<0.5)?random_left_pos:random_right_pos;
 }
-	
-var skip = 0;
+
+//document init
 $(document).ready(function() {
+
+	//socket io
 	  var socket = io();
+	  
+	  //show other users input
 	   socket.on('refresh feed',function(response){
             $(".words-body").prepend("<span style = \'color:" + response.color + ";font-weight:"+ response.weight+ "\'>" + response.words + "</span>");	
 		            	
@@ -62,7 +79,11 @@ $(document).ready(function() {
 		      $(document.body).append(elem);
 		       elem.hide().fadeIn('slow');
 		       elem.delay('2000').fadeOut("slow");
+		       $.get("/count", function(result){
+					$("#Total").text("Total Count : " + result);
+				});
        });
+
 	//count words or characters
 	$('#input_box').on('input', function() {
 
@@ -86,7 +107,7 @@ $(document).ready(function() {
 				    e.preventDefault();
 				});
 		}
-		//detach preventdefuat 
+		//detach preventdefault
 		else{
 				$('#input_box').off("keypress");
 		}
@@ -104,6 +125,13 @@ $(document).ready(function() {
 
 	});
 
+	$.get("/count", function(result){
+		
+		$("#Total").text("Total Count : " + result);
+	});
+
+
+	//send data to server 
 	$('#comment').submit(function() {
 
 
@@ -153,7 +181,7 @@ $(document).ready(function() {
 		
 
 
-	//onscroll
+	//get data by on scroll down
 	var lastScrollTop = 0;
 	$(window).scroll(function(event){
 	  if($(window).scrollTop() + $(window).height() == $(document).height()) {
