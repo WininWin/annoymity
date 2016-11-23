@@ -40,7 +40,7 @@ db.on('error', console.error);
 
 
 //db connect
-mongoose.connect('mongodb://localhost/anoymity_speech');
+mongoose.connect('mongodb://localhost/anonymity_db');
 
 //db open
 db.once('open', function() {
@@ -63,7 +63,7 @@ db.once('open', function() {
 
 
 		 		// 100 words limit + ' / ', 1000 characters limit
-		 		if(word_Count <= 101 && character_Count <= 1001){
+		 		if(word_Count <= 51 && character_Count <= 501){
 		 			//save to db
 			   		words_for_db.save(function(err,silence){
 					if(err){
@@ -108,7 +108,6 @@ db.once('open', function() {
 		//get total data counts
 		app.get('/count', function(req, res, err){
 			WordsModel.count({}, function( err, count){
-    			console.log( "Number of datas:", count );
 
     			if(err){
     				console.log(err);

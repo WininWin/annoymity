@@ -139,7 +139,7 @@ $(document).ready(function() {
             interval = setTimeout(function () {
                 interval = undefined;
                 timesSubmitted = 0;
-            }, 10000);
+            }, 20000);
 	        }
 	        timesSubmitted ++;
 	   		 if (timesSubmitted > 5) {
