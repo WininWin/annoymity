@@ -9,11 +9,9 @@ var wordFilter = (function() {
 	 * @return {String} words after filtering
 	 */
 	function filter(words) {
-
+		words = words.trim();
 		//prevent script 
-		words = words.replace(/&/g, '&amp');
-		words = words.replace(/</g, '&lt');
-		words = words.replace(/>/g, '&gt');
+		words = words.replace(/[&\/\\#+=~%.:;*<>{}$()]/g, '');
 		
 
 		//prevent too many spaces
@@ -25,7 +23,7 @@ var wordFilter = (function() {
 		
 
 		//add a / for sepaerating each input
-		return words + " / ";
+		return words;
 
 
 	}

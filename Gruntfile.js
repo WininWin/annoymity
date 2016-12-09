@@ -9,8 +9,7 @@ module.exports = function(grunt) {
       },
       dist: {
         files: {
-          'build/app.js': ['build/app.js'],
-          'build/public/js/script.js' : ['src/public/js/*.js'],
+          'build/public/js/script.js' : ['src/public/js/script.js'],
           'build/wordFilter.js' : ['src/wordFilter.js']
 
         }
@@ -55,9 +54,11 @@ module.exports = function(grunt) {
       }
     },
     jshint: {
-      files: ['Gruntfile.js', 'src/*.js', 'src/public/js/*.js', 'test/**/*.js'],
+      files: ['Gruntfile.js', 'src/*.js', 'src/public/js/script.js', 'test/**/*.js'],
       options: {
         // options here to override JSHint defaults
+        esversion: 6,
+        loopfunc: true,
         globals: {
           jQuery: true,
           console: true,

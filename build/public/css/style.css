@@ -6,6 +6,15 @@ html, body{
 	width: 500px;
 	height: 240px;
 	background-color: #B0C4DE;
+	opacity: 0.95;
+	position: fixed;
+    left: 50%;
+    top:25%;
+    transform: translate(-50%, 0);
+    -webkit-transform: translate(-50%, 0);
+    z-index: 1;
+}
+#doc_loading{
 	position: fixed;
     left: 50%;
     top:25%;

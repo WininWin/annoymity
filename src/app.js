@@ -1,11 +1,16 @@
 //require
-var express = require('express');
-var mongoose = require('mongoose');
-var xml2js = require('xml2js');
-var parser = new xml2js.Parser();
-var bodyParser = require('body-parser');
+const express = require('express');
+const mongoose = require('mongoose');
+const xml2js = require('xml2js');
+const parser = new xml2js.Parser();
+const bodyParser = require('body-parser');
 
-var wordFilter = require('./wordFilter.js');
+const wordFilter = require('./wordFilter.js');
+
+const Canvas = require("canvas");
+
+const cloud = require("./public/js/d3.layout.cloud.js");
+
 
 //servier init
 var app = express();
@@ -26,9 +31,8 @@ http.listen(port,function(){
 
 //db schema
 var wordsSchema = mongoose.Schema({
-    words: String,
-    color : String,
-    weight : String,
+    word: String,
+    size: Number,
     createdAt: {type: Date, default: Date.now}
 });
 var WordsModel = mongoose.model('words_model', wordsSchema);
@@ -38,7 +42,6 @@ var WordsModel = mongoose.model('words_model', wordsSchema);
 var db = mongoose.connection;
 db.on('error', console.error);
 
-
 //db connect
 mongoose.connect('mongodb://localhost/anonymity_db');
 
@@ -46,7 +49,6 @@ mongoose.connect('mongodb://localhost/anonymity_db');
 db.once('open', function() {
 	//socket io connect
 	io.on('connection',function(socket){ 
-	  	
 
 		 	//receive data and save to db
 		 	app.post('/words', function(req,res,err){
@@ -56,32 +58,63 @@ db.once('open', function() {
 		 		//filter the words
 		 		var words_after_filtering = wordFilter.Filtering(words);
 
-		 		var words_for_db = new WordsModel({words : words_after_filtering, color : req.body.color, weight : req.body.weight});
+		 		var remove_dup = new Set(words_after_filtering.split(' '));
+		 		var arr = [...remove_dup];
+		 		
+		 	
+		 		while(arr.length !== 0){
+
+		 			var item = arr.pop();
+		 			
+		 			(function(item){
+		 				
+		 				WordsModel.findOne({ word: item }, function (err, doc) {
+							if(err){
+								console.log(err);	
+							}
+							if(doc!==null){
+								doc.size = doc.size + 1;
+							  doc.save(function(err, sil){
+							  	if(err) throw err;
+							  });
+							}
+							else{
+								var word_for_db = new WordsModel({word : item, size : 1});
+							 	word_for_db.save(function(err, sil){
+							  	if(err) throw err;
+							  	});
+							}
+						 
+					});
+
+		 			})(item);
+		 			
+		 		}
+
+		 		
 
 		 		var word_Count = (words_after_filtering.split(' ')).length;
 		 		var character_Count = (words_after_filtering.split("")).length;
 
 
-		 		// 100 words limit + ' / ', 1000 characters limit
-		 		if(word_Count <= 51 && character_Count <= 501){
-		 			//save to db
-			   		words_for_db.save(function(err,silence){
-					if(err){
-						    console.err(err);
-						    throw err;
-						}
-				    });
+		 		// 30 words limit, 150 characters limit
+		
+
+		       if(word_Count <= 30 && character_Count <= 150){
 
 			 		//send data
 			 		if(res){
-			 				res.send(words_for_db);
-				            io.emit('refresh feed',words_for_db);
+			 				
+			 			
+				            io.emit('refresh feed', words_after_filtering);
 				    } 
 				    else {
 				            io.emit('error');
 				        }
 		 		}
 
+		      
+		 		
 	 		
 
 	 	});
@@ -95,7 +128,7 @@ db.once('open', function() {
 		//init browser
 		app.get('/all', function(req,res,err){
 
-		    WordsModel.find().sort({createdAt: -1}).skip(parseInt(req.query.skip)).limit(parseInt(req.query.limit)).exec(function(err,all){
+		    WordsModel.find().exec(function(err,all){
 		        if(err){
 		            console.log(err);
 		            throw err;

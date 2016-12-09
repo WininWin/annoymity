@@ -9,17 +9,23 @@
   integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
   crossorigin="anonymous"></script>
 	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-	
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 	<script src="http://malsup.github.com/jquery.form.js"></script> 
 	<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.4.0/d3.min.js"></script>
+	<script src="./js/d3.layout.cloud.js"></script>
+	
 
 	<link href="./css/style.css" rel="stylesheet">
-	<script src="./js/script.js"></script>
+	
 </head>
 <body>
-	<div class="words-body">
+
+	<div id="doc_loading">
+		<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+	<span class="sr-only">Loading...</span>
+		
 	</div>
 	
 	<div class="container" id="main">
@@ -30,20 +36,10 @@
 		<div class="row" id="input_field">
 			
 			<form action="/words" id = "comment" method = "post">
-				<textarea type = "text" rows="4" name="words" id="input_box" maxlength="1000" placeholder="Limit 50 words or 500 characters..." required></textarea>
-				
-				<span id = "textColor">Color : 
-					<input type="radio" name="color" value="Black" checked="checked">Black</input>
-					<input type="radio" name="color" value="Red"> Red</input>
-					<input type="radio" name="color" value="Blue">Blue</input>
-				</span> 
-				<span id="textStyle">/ Style :
-					<input type="radio" name="weight" value="normal" checked="checked">Normal</input>
-					<input type="radio" name="weight" value="bold">Bold</input>
-				
-				</span>
+				<textarea type = "text" rows="4" name="words" id="input_box" maxlength="1000" placeholder="Limit 30 words or 150 characters..." required></textarea>
 				
 				<button id = "submit" class="btn btn-primary pull-right" type="submit" >Submit</button>
+				<span id ="loading" class="pull-right"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></span>
 				<br>
 				<span id = "wordcount">Word Count : 0 /</span>
 				<span id="chara_count">Character Count : 0</span> <br>
@@ -58,4 +54,7 @@
 	</div>
 	
 </body>
+
+<script src="./js/script.js"></script>
+
 </html>

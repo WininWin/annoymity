@@ -1,2 +1,2 @@
-/*! anonymity 23-11-2016 */
-var wordFilter=function(){function a(a){return a=a.replace(/&/g,"&amp"),a=a.replace(/</g,"&lt"),a=a.replace(/>/g,"&gt"),a=a.replace(/\s\s+/g," "),a=a.replace(/\r?\n|\r/g," "),a+" / "}return{Filtering:function(b){return a(b)}}}();module.exports=wordFilter;
+/*! anonymity 09-12-2016 */
+var wordFilter=function(){function a(a){return a=a.trim(),a=a.replace(/[&\/\\#+=~%.:;*<>{}$()]/g,""),a=a.replace(/\s\s+/g," "),a=a.replace(/\r?\n|\r/g," ")}return{Filtering:function(b){return a(b)}}}();module.exports=wordFilter;

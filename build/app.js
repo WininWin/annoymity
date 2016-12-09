@@ -1,2 +1,161 @@
-/*! anonymity 23-11-2016 */
-process.env.NODE_ENV="production",process.env.PORT=80;var express=require("express"),mongoose=require("mongoose"),xml2js=require("xml2js"),parser=new xml2js.Parser,bodyParser=require("body-parser"),wordFilter=require("./wordFilter.js"),app=express();app.use(express.static(__dirname+"/public/"));var port=process.env.PORT||3e3;console.log("Express server running on "+port),app.use(bodyParser.json()),app.use(bodyParser.urlencoded({extended:!0}));var http=require("http").Server(app),io=require("socket.io")(http);http.listen(port,function(){console.log("Listening on "+port)});var wordsSchema=mongoose.Schema({words:String,color:String,weight:String,createdAt:{type:Date,default:Date.now}}),WordsModel=mongoose.model("words_model",wordsSchema),db=mongoose.connection;db.on("error",console.error),mongoose.connect("mongodb://localhost/anonymity_db"),db.once("open",function(){io.on("connection",function(a){app.post("/words",function(a,b,c){var d=a.body.words,e=wordFilter.Filtering(d),f=new WordsModel({words:e,color:a.body.color,weight:a.body.weight}),g=e.split(" ").length,h=e.split("").length;g<=51&&h<=501&&(f.save(function(a,b){if(a)throw console.err(a),a}),b?(b.send(f),io.emit("refresh feed",f)):io.emit("error"))}),app.get("/all",function(a,b,c){WordsModel.find().sort({createdAt:-1}).skip(parseInt(a.query.skip)).limit(parseInt(a.query.limit)).exec(function(a,c){if(a)throw console.log(a),a;b.send(c)})}),app.get("/count",function(a,b,c){WordsModel.count({},function(a,c){a&&console.log(a),b.send(c.toString())})})})});
+process.env.NODE_ENV = 'production';
+process.env.PORT = 80;;//require
+const express = require('express');
+const mongoose = require('mongoose');
+const xml2js = require('xml2js');
+const parser = new xml2js.Parser();
+const bodyParser = require('body-parser');
+
+const wordFilter = require('./wordFilter.js');
+
+const Canvas = require("canvas");
+
+const cloud = require("./public/js/d3.layout.cloud.js");
+
+
+//servier init
+var app = express();
+app.use(express.static(__dirname + '/public/'));
+var port = process.env.PORT || 3000;
+console.log("Express server running on " + port);
+//app.listen(process.env.PORT || port);
+app.use( bodyParser.json() );       // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+  extended: true
+})); 
+
+var http =  require('http').Server(app);
+var io   =  require("socket.io")(http);
+http.listen(port,function(){
+    console.log("Listening on " + port);
+});
+
+//db schema
+var wordsSchema = mongoose.Schema({
+    word: String,
+    size: Number,
+    createdAt: {type: Date, default: Date.now}
+});
+var WordsModel = mongoose.model('words_model', wordsSchema);
+
+
+//db init
+var db = mongoose.connection;
+db.on('error', console.error);
+
+//db connect
+mongoose.connect('mongodb://localhost/anonymity_db');
+
+//db open
+db.once('open', function() {
+	//socket io connect
+	io.on('connection',function(socket){ 
+
+		 	//receive data and save to db
+		 	app.post('/words', function(req,res,err){
+		 		
+		 		var words = req.body.words;
+
+		 		//filter the words
+		 		var words_after_filtering = wordFilter.Filtering(words);
+
+		 		var remove_dup = new Set(words_after_filtering.split(' '));
+		 		var arr = [...remove_dup];
+		 		
+		 	
+		 		while(arr.length !== 0){
+
+		 			var item = arr.pop();
+		 			
+		 			(function(item){
+		 				
+		 				WordsModel.findOne({ word: item }, function (err, doc) {
+							if(err){
+								console.log(err);	
+							}
+							if(doc!==null){
+								doc.size = doc.size + 1;
+							  doc.save(function(err, sil){
+							  	if(err) throw err;
+							  });
+							}
+							else{
+								var word_for_db = new WordsModel({word : item, size : 1});
+							 	word_for_db.save(function(err, sil){
+							  	if(err) throw err;
+							  	});
+							}
+						 
+					});
+
+		 			})(item);
+		 			
+		 		}
+
+		 		
+
+		 		var word_Count = (words_after_filtering.split(' ')).length;
+		 		var character_Count = (words_after_filtering.split("")).length;
+
+
+		 		// 30 words limit, 150 characters limit
+		
+
+		       if(word_Count <= 30 && character_Count <= 150){
+
+			 		//send data
+			 		if(res){
+			 				
+			 			
+				            io.emit('refresh feed', words_after_filtering);
+				    } 
+				    else {
+				            io.emit('error');
+				        }
+		 		}
+
+		      
+		 		
+	 		
+
+	 	});
+
+
+
+		
+	 	
+		
+
+		//init browser
+		app.get('/all', function(req,res,err){
+
+		    WordsModel.find().exec(function(err,all){
+		        if(err){
+		            console.log(err);
+		            throw err;
+		        }
+
+		        res.send(all);
+			    });
+		});
+
+		//get total data counts
+		app.get('/count', function(req, res, err){
+			WordsModel.count({}, function( err, count){
+
+    			if(err){
+    				console.log(err);
+    			}
+
+    			res.send(count.toString());
+
+    		});
+		});
+
+	
+	});
+
+
+
+});
+
