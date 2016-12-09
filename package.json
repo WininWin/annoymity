@@ -24,7 +24,6 @@
     "xml2js": "^0.4.17"
   },
   "dependencies": {
-    "canvas": "^1.6.2",
     "mongoose": "^4.6.8"
   }
 }

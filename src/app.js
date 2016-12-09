@@ -7,8 +7,6 @@ const bodyParser = require('body-parser');
 
 const wordFilter = require('./wordFilter.js');
 
-const Canvas = require("canvas");
-
 const cloud = require("./public/js/d3.layout.cloud.js");
 
 
