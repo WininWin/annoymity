@@ -108,24 +108,7 @@ $(document).ready(function() {
 					$("#Total").text("Total Count : " + result);
 				});
 		    		
-		       $.get("/all", function(result) {
-		
-					init_words = result;
-						
-		       layout
-				    .words(init_words.map(function(d) {
-				      return {text: d.word, size: d.size};
-				    }))
-				    .padding(5)
-				    .rotate(function() { return ~~(Math.random() * 2) * 90; })
-				    .font("Impact")
-				    .fontSize(function(d) { return d.size; })
-				    .on("end", update);
 
-				    layout.start();
-				    $("#submit").show();
-					$("#loading").hide();
-				});
 
 				
 		       setTimeout(function(){
@@ -133,6 +116,35 @@ $(document).ready(function() {
 		       	 elem.remove();
 		       	}, 3000);
 		      
+       });
+
+       socket.on('refresh d3', function(response){
+
+       		if(response === 'done'){
+       			$.get("/all", function(result) {
+			
+						init_words = result;
+							
+			       layout
+					    .words(init_words.map(function(d) {
+					      return {text: d.word, size: d.size};
+					    }))
+					    .padding(5)
+					    .rotate(function() { return ~~(Math.random() * 2) * 90; })
+					    .font("Impact")
+					    .fontSize(function(d) { return d.size; })
+					    .on("end", update);
+
+					    layout.start();
+
+					     if (timesSubmitted < 6) {
+					    $("#submit").show();
+						$("#loading").hide();
+						}
+					   
+					});
+       		}
+       			  
        });
 
 
@@ -213,7 +225,7 @@ layout = d3.layout.cloud()
 
 
 	//send data to server 
-	$('#comment').submit(function() {
+	$('#comment').submit(function(event) {
 		$("#submit").hide();
 		$("#loading").show();
 		var cookie = getCookie("toomanyattempts");
@@ -232,10 +244,10 @@ layout = d3.layout.cloud()
 	        }
 	         timesSubmitted = timesSubmitted+1;
 	        setCookie('toomanyattempts', timesSubmitted, 1);
-	   		 if (timesSubmitted > 5) {
+	   		if (timesSubmitted > 5) {
 	   		 
 	            $('#error_msg').text('Too many submit attempts!!').fadeIn('slow').delay('2000').fadeOut('slow');
-	            return false;
+	            event.preventDefault();
 	        } 
 	       else{
 		       	var w_count = wordCount($('#input_box').val());
@@ -244,7 +256,7 @@ layout = d3.layout.cloud()
 				//copy and paste exceed 30 words or 150 characters
 				if(w_count > 30 || c_count > 150){
 					$("#error_msg").text("You exceed 30 words or 150 characters");
-					return false;
+					event.preventDefault();
 				}
 				//data send
 				$(this).ajaxSubmit({
@@ -257,12 +269,12 @@ layout = d3.layout.cloud()
 		            success: function(response) {
 		            	
 						
-		            }
+			        }
 
 				});
 
 				// Prevent default form action 
-				return false;
+				event.preventDefault();
 	       }
 			
 

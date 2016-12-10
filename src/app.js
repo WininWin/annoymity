@@ -102,8 +102,11 @@ db.once('open', function() {
 
 			 		//send data
 			 		if(res){
+			 				res.send('done');
+
 			 				
-			 			
+
+			 				io.emit('refresh d3', 'done');
 				            io.emit('refresh feed', words_after_filtering);
 				    } 
 				    else {
