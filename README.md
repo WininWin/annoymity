@@ -8,5 +8,5 @@ It is using d3 word cloud layout by https://github.com/jasondavies/d3-cloud.
 It is running on aws by using node express server. 
 
 #Live version
-ec2-35-163-208-223.us-west-2.compute.amazonaws.com
+http://ec2-35-163-208-223.us-west-2.compute.amazonaws.com
 
