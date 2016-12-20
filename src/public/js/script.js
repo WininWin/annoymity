@@ -255,7 +255,7 @@ layout = d3.layout.cloud()
 
 				//copy and paste exceed 30 words or 150 characters
 				if(w_count > 30 || c_count > 150){
-					$("#error_msg").text("You exceed 30 words or 150 characters");
+					$("#error_msg").text("You exceed 30 words or 150 characters").fadeIn('slow').delay('2000').fadeOut('slow');
 					$("#submit").show();
 					 $("#loading").hide();
 					return false;
