@@ -21,8 +21,6 @@ var wordFilter = (function() {
 		words = words.replace(/\r?\n|\r/g, ' ');
 
 		
-
-		//add a / for sepaerating each input
 		return words;
 
 

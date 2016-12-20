@@ -1,2 +1,2 @@
-/*! anonymity 09-12-2016 */
+/*! anonymity 19-12-2016 */
 var wordFilter=function(){function a(a){return a=a.trim(),a=a.replace(/[&\/\\#+=~%.:;*<>{}$()]/g,""),a=a.replace(/\s\s+/g," "),a=a.replace(/\r?\n|\r/g," ")}return{Filtering:function(b){return a(b)}}}();module.exports=wordFilter;

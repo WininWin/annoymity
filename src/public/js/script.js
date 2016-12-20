@@ -247,7 +247,7 @@ layout = d3.layout.cloud()
 	   		if (timesSubmitted > 5) {
 	   		 
 	            $('#error_msg').text('Too many submit attempts!!').fadeIn('slow').delay('2000').fadeOut('slow');
-	            event.preventDefault();
+	            return false;
 	        } 
 	       else{
 		       	var w_count = wordCount($('#input_box').val());
@@ -256,7 +256,9 @@ layout = d3.layout.cloud()
 				//copy and paste exceed 30 words or 150 characters
 				if(w_count > 30 || c_count > 150){
 					$("#error_msg").text("You exceed 30 words or 150 characters");
-					event.preventDefault();
+					$("#submit").show();
+					 $("#loading").hide();
+					return false;
 				}
 				//data send
 				$(this).ajaxSubmit({
@@ -274,7 +276,7 @@ layout = d3.layout.cloud()
 				});
 
 				// Prevent default form action 
-				event.preventDefault();
+				return false;
 	       }
 			
 
